@@ -11,7 +11,6 @@ format:
     code-fold: true
     code-block-border-left: true
     embed-resources: true
-editor: visual
 ---
 
 ## Summary
@@ -218,7 +217,7 @@ The samples IDs (`IDNO`) and variable names are consistent between the SPSS and 
 
 #### Differences between FORS and HERUS data
 
-```{r diff-wave2-columns}
+```{r wave2-extravar-HERUS}
 #| results: asis
 #| echo: false
 
@@ -234,6 +233,22 @@ cat(
   sprintf("\n\n* `%s`\n\n", stringr::str_c(herus_extra_columns, collapse = "`,\n * `"))
 )
 
+```
+
+Out of the 18 additional columns found in the HERUS data, the `HS_ZONE_C` and `HS_URBANAREA_C` are documented in the `READ_ME.docx` file.
+
+-   `HS_URBANAREA2_C` is an identical copy of `HS_URBANAREA_C` and could be removed.
+-   `Pays_cor` is a correction of the `Pays` variable for three samples erroneously identified as `Suisse`
+-   `weight_tot` is an undocumented weighting variable, used to create some figures
+-   `Groupe2` is a grouping variable with a finer granularity than `HS_ZONE_C`, created from `Groupe` in `figures_edition_main.R`
+-   `Groupe3` is a grouping variable created from `Groupe` in `figures_edition_main.R`
+
+The remaining additional variables `LOG_Q7`, `LOG_Q6`, `LOG_Q0`, `ENE_Q0`, `END_Q0`, `END_Q1`, `END_Q3`, `END_Q4`, `END_Q5`, `END_Q6`, `END_Q7` are artefacts due to an erroneous export from SPSS to RDS.
+
+```{r wave2-extravar-FORS}
+#| results: asis
+#| echo: false
+
 cat(
   sprintf(
     "The FORS data contains %i columns that are not included in the HERUS data.",
@@ -245,15 +260,6 @@ cat(
 
 ```
 
-Out of the 18 additional columns found in the HERUS data, the `HS_ZONE_C` and `HS_URBANAREA_C` are documented in the `READ_ME.docx` file.
-
--   `HS_URBANAREA2_C` is an identical copy of `HS_URBANAREA_C` and could be removed.
--   `Pays_cor` is a correction of the `Pays` variable for three samples erroneously identified as `Suisse`
--   `weight_tot` is an undocumented weighting variable
--   `Groupe2` is a variable with a finer granularity than `HS_ZONE_C`
--   `Groupe3` is unclear
-
-The remaining additional variables `LOG_Q7`, `LOG_Q6`, `LOG_Q0`, `ENE_Q0`, `END_Q0`, `END_Q1`, `END_Q3`, `END_Q4`, `END_Q5`, `END_Q6`, `END_Q7` are artefacts due to an erroneous export from SPSS to RDS.
 
 ```{r diff-wave2-ids}
 #| results: asis
@@ -305,6 +311,8 @@ is_diagonal <- function(x) {
 
 -   Identical: `Groupe`, `GP_Age_source`
 -   Different: `Pays`, `CP_source`, `Localité_source`, `CP_actuel`, `Localité_atuel`
+
+Are there some variables that should stay constant throughout the waves? Groupe? GP_Age_source? CP_source? Localité_source?
 
 #### Which dataset is included in which dataset?
 
