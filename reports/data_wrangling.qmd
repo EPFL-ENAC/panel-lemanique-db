@@ -2,7 +2,7 @@
 title: "Lemanique Panel - data wrangling"
 author: "Hugo Solleder"
 date: today
-format: 
+format:
   html:
     toc: true
     toc-depth: 5
@@ -47,7 +47,6 @@ wave1_data <- haven::read_sav(
     "Enquête mobilité/EPFL_vague1_pond_clean_240319.sav"
   )
 )
-
 ```
 
 ```{r display-wave1-data}
@@ -59,7 +58,6 @@ cat(sprintf(
   nrow(wave1_data),
   ncol(wave1_data)
 ))
-
 ```
 
 ### Wave 2
@@ -81,7 +79,6 @@ fors_spss_data <- haven::read_sav(
     "Enquête consommation/Data/Database from FORS/EPFL Panel LÇmanique Vague 2 _FINAL_EPFL.sav"
   )
 )
-
 ```
 
 ```{r display-fors-spss-data}
@@ -93,7 +90,6 @@ cat(sprintf(
   nrow(fors_spss_data),
   ncol(fors_spss_data)
 ))
-
 ```
 
 The data dictionary was probably extracted from SPSS for this file.
@@ -124,7 +120,6 @@ cat(sprintf(
   nrow(fors_csv_data),
   ncol(fors_csv_data)
 ))
-
 ```
 
 ##### Comparison
@@ -143,14 +138,15 @@ cat(
   "Beyond the first column specifying the row number, the four additional columns are the ",
   sprintf("following: `%s`.", stringr::str_c(additional_csv_columns[-1], collapse = "`, `"))
 )
-
 ```
 
 These four additional columns are documented in the `READ_ME.docx` file, as weighting strategies build by LASUR during Wave 1 and 2. The variables with the `wgt_cant_trim` correspond to a canton- or country-based weighting, whereas `wgt_agg_trim` correspond to an agglomeration-based weighting. Variables ending in `_v2` indicate that this variable was used for the second wave.
 
-Based on the `IDNO` variable, the CSV file in a strict subset of the SPSS file, with all 5534 samples from the SPSS file found in the CSV.
+Based on the `IDNO` variable, the CSV file in a strict subset of the SPSS file, with all 5534 samples from the SPSS file found in the CSV. The subset is based on the `Particip_v2` variable, detailing the amount of participation to the study. Participants with a complete (defined as having seen more than 95% of the questions) or incomplete (defined as having seen between 6 to 94% AND having answered at least the first question) participation were selected.
 
 #### HERUS
+
+Contrary to what is written in the READ_ME, the `HERUS` is not a subset of the FORS data that is limited to participants from Vaud, Geneva or France, as it includes 384 samples coming from Valais (*n* = 76) and from Fribourg (*n* = 308). How exactly this subset was created is unclear. Part of the exclusion criteria must have been the `ParticipV2` variable, as the `HERUS` subset only includes samples with a complete participation.
 
 ##### SPSS
 
@@ -169,7 +165,6 @@ herus_spss_data <- foreign::read.spss(
   to.data.frame = TRUE,
   trim_values = TRUE
 )
-
 ```
 
 ```{r display-herus-spss-data}
@@ -181,7 +176,6 @@ cat(sprintf(
   nrow(herus_spss_data),
   ncol(herus_spss_data)
 ))
-
 ```
 
 ##### RDS
@@ -196,7 +190,6 @@ herus_rds_data <- readRDS(
     "Enquête consommation/Data/Database update for report/EPFL Panel LÇmanique Vague 2 _Update_HERUS.rds"
   )
 )
-
 ```
 
 ```{r display-herus-rds-data}
@@ -208,7 +201,6 @@ cat(sprintf(
   nrow(herus_rds_data),
   ncol(herus_rds_data)
 ))
-
 ```
 
 ##### Comparison
@@ -232,7 +224,6 @@ cat(
   "The additional columns are the following: ",
   sprintf("\n\n* `%s`\n\n", stringr::str_c(herus_extra_columns, collapse = "`,\n * `"))
 )
-
 ```
 
 Out of the 18 additional columns found in the HERUS data, the `HS_ZONE_C` and `HS_URBANAREA_C` are documented in the `READ_ME.docx` file.
@@ -251,13 +242,12 @@ The remaining additional variables `LOG_Q7`, `LOG_Q6`, `LOG_Q0`, `ENE_Q0`, `END_
 
 cat(
   sprintf(
-    "The FORS data contains %i columns that are not included in the HERUS data.",
+    "The FORS CSV data contains %i columns that are not included in any HERUS data source.",
     length(fors_extra_columns)
   ),
   "Beyond the first column indicating the row number, the additional columns are the following: ",
   sprintf("\n\n* `%s`\n", stringr::str_c(fors_extra_columns[-1], collapse = "`,\n * `"))
 )
-
 ```
 
 
@@ -269,27 +259,24 @@ cat(sprintf(
   "Additionally, the overlap in `IDNO` between the FORS and HERUS data is limited to **%i samples**.",
   length(intersect(herus_spss_data$IDNO, fors_spss_data$IDNO))
 ))
-
 ```
 
 ### Questions to answer
 
 ```{r questions}
-
-w1_inw2 <- wave1_data |> 
-  dplyr::filter(IDNO %in% fors_csv_data$IDNO) |> 
+w1_inw2 <- wave1_data |>
+  dplyr::filter(IDNO %in% fors_csv_data$IDNO) |>
   dplyr::arrange(IDNO)
 
-w2_inw1 <- fors_csv_data |> 
-  dplyr::filter(IDNO %in% wave1_data$IDNO) |>  
+w2_inw1 <- fors_csv_data |>
+  dplyr::filter(IDNO %in% wave1_data$IDNO) |>
   dplyr::arrange(IDNO)
 
-w2_notinw1 <- fors_csv_data |> 
-  dplyr::filter(IDNO %in% setdiff(IDNO, wave1_data$IDNO)) |>  
+w2_notinw1 <- fors_csv_data |>
+  dplyr::filter(IDNO %in% setdiff(IDNO, wave1_data$IDNO)) |>
   dplyr::arrange(IDNO)
 
 shared_variables <- intersect(colnames(w1_inw2), colnames(w2_inw1))
-
 ```
 
 ```{r variable_overlap}
@@ -298,7 +285,7 @@ shared_variables <- intersect(colnames(w1_inw2), colnames(w2_inw1))
 
 cat(
   "The following variables are present in both waves: `",
-  stringr::str_c(shared_variables, collapse = "`, `" ),
+  stringr::str_c(shared_variables, collapse = "`, `"),
   "`",
   sep = ""
 )
@@ -306,7 +293,6 @@ cat(
 is_diagonal <- function(x) {
   sum(abs(x)) == sum(abs(diag(x)))
 }
-
 ```
 
 -   Identical: `Groupe`, `GP_Age_source`
@@ -321,14 +307,13 @@ Is some data stable over time? There are
 #### How was the weighting obtained for the second wave?
 
 ```{r weighting-question}
-
 cat(
   sprintf(
-    "The largest difference in `wgt_agg_trim` is %.2e.\n", 
+    "The largest difference in `wgt_agg_trim` is %.2e.\n",
     max(abs(w1_inw2$wgt_agg_trim - w2_inw1$wgt_agg_trim))
   ),
   sprintf(
-    "The largest difference in `wgt_agg_trim_v2` is %.2e.\n", 
+    "The largest difference in `wgt_agg_trim_v2` is %.2e.\n",
     max(abs(as.numeric(w1_inw2$wgt_agg_trim_v2) - w2_inw1$wgt_agg_trim_v2))
   ),
   sprintf(
@@ -336,12 +321,11 @@ cat(
     max(abs(w1_inw2$wgt_cant_trim - w2_inw1$wgt_cant_trim))
   ),
   sprintf(
-    "The largest difference in `wgt_cant_trim_v2` is %.2e.\n", 
+    "The largest difference in `wgt_cant_trim_v2` is %.2e.\n",
     max(abs(as.numeric(w1_inw2$wgt_cant_trim_v2) - w2_inw1$wgt_cant_trim_v2))
   ),
   sep = ""
 )
-
 ```
 
 Given that all samples in wave 2 have either weighting across the four weighting variables that is either systematically
