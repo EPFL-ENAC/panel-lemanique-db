@@ -40,11 +40,40 @@ repos:
     rev: v0.4.3
     hooks:
     -   id: lintr
-        args: [--warn_only, --key=value]
+        args: [--warn_only]
         verbose: true
+        additional_dependencies:
+          - r-lib/lintr
+          - any::cyclocomp
     -   id: style-files
         args: [--scope=spaces, --reindention=specify_reindention('#')]
     -   id: no-browser-statement
     -   id: no-print-statement
     -   id: no-debug-statement
     -   id: spell-check
+        exclude: >
+          (?x)^(
+          \.github/.*\.yaml|
+          data/.*|
+          tests/testthat/.*|
+          touchstone/config\.json|
+          (.*/|)\.Rprofile|
+          (.*/|)\.Renviron|
+          (.*/|)\.gitignore|
+          (.*/|)NAMESPACE|
+          (.*/|)WORDLIST|
+          (.*/|)\.travis.yml|
+          (.*/|)appveyor.yml|
+          (.*/|)\.Rbuildignore|
+          (.*/|)\.pre-commit-.*|
+          .*\.[rR]|
+          .*\.Rproj|
+          .*\.py|
+          .*\.feather|
+          .*\.rds|
+          .*\.Rds|
+          .*\.sh|
+          .*\.RData|
+          .*\.png|
+          .*-in_tree
+          )$
