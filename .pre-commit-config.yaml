@@ -75,6 +75,8 @@ repos:
           (.*/|)renv/settings\.dcf|
           (.*/|)renv\.lock|
           (.*/|)WORDLIST|
+          (.*/|)poetry\.lock|
+          (.*/|)pyproject\.toml|
           \.github/workflows/.*|
           data/.*|
           inst/hooks/.*|
