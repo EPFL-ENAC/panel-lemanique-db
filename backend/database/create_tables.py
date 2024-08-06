@@ -2,6 +2,7 @@ import os
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 
+# noqa F401 is necessary to avoid having ruff automatically remove the unused imports
 from models.base import Base  # noqa F401
 from models.participant_labels import ParticipantLabels  # noqa F401
 from models.participants import Participants  # noqa F401
