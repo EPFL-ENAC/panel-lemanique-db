@@ -49,6 +49,10 @@ repos:
         args: [--scope=spaces, --reindention=specify_reindention('#')]
     -   id: no-browser-statement
     -   id: no-print-statement
+        exclude: >
+          (?x)^(
+          data_preprocessing/renv/.*
+          )$
     -   id: no-debug-statement
     -   id: spell-check
         exclude: >
@@ -78,12 +82,12 @@ repos:
           (.*/|)poetry\.lock|
           (.*/|)pyproject\.toml|
           \.github/workflows/.*|
-          data/.*|
+          data_preprocessing/data/.*|
           inst/hooks/.*|
           inst/pre-commit-.*|
           inst/usethis-legacy-hook|
           LICENSE|
-          renv/.*|
+          data_preprocessing/renv/.*|
           revdep/.*|
           tests/testthat/in/.*|
           )$
