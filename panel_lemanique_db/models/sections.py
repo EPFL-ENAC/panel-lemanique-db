@@ -1,10 +1,12 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import mapped_column, Mapped
 from .base import Base
 
 
 class Sections(Base):
     __tablename__ = "sections"
-    section_id = Column(Integer, primary_key=True)
-    section_topic = Column(Text)
-    section_name = Column(Text)
-    survey_id = Column(Integer, ForeignKey("surveys.survey_id"))
+
+    section_id: Mapped[int] = mapped_column(primary_key=True)
+    section_topic: Mapped[str]
+    section_name: Mapped[str]
+    survey_id: Mapped[int] = mapped_column(ForeignKey("surveys.survey_id"))

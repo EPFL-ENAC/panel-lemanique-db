@@ -1,10 +1,12 @@
-from sqlalchemy import Column, Integer, Text, Date
+from datetime import date
+from sqlalchemy.orm import mapped_column, Mapped
 from .base import Base
 
 
 class Surveys(Base):
     __tablename__ = "surveys"
-    survey_id = Column(Integer, primary_key=True)
-    survey_topic = Column(Text)
-    survey_date = Column(Date)
-    survey_name = Column(Text)
+
+    survey_id: Mapped[int] = mapped_column(primary_key=True)
+    survey_topic: Mapped[str]
+    survey_date: Mapped[date]
+    survey_name: Mapped[str]
