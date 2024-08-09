@@ -46,7 +46,7 @@ repos:
           - r-lib/lintr
           - any::cyclocomp
     -   id: style-files
-        args: [--scope=spaces, --reindention=specify_reindention('#')]
+        args: [--scope=line_breaks]
     -   id: no-browser-statement
     -   id: no-print-statement
         exclude: >
