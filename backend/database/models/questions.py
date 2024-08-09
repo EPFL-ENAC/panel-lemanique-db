@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped
 from .base import Base
@@ -10,4 +11,4 @@ class Questions(Base):
     section_id: Mapped[int] = mapped_column(ForeignKey("sections.section_id"))
     question_code: Mapped[str]
     question_text: Mapped[str]
-    question_type: Mapped[str]
+    question_type: Mapped[Optional[str]]  # Optional for now, not in the future
