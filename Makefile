@@ -6,6 +6,9 @@ clean:
 preprocess_data:
 	cd data_preprocessing && make $@
 
+create_tables:
+	cd backend && make $@
+
 reset_tables:
 	cd backend && make $@
 
