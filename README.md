@@ -8,7 +8,7 @@ This repository pre-processes data from the Panel Lémanique, ingests it in a Po
 
 ## Install
 
-Start by cloning the repository, e.g. using
+Start by cloning the repository, for instance using
 
 ```bash
 git clone git@github.com:EPFL-ENAC/panel-lemanique-db.git
