@@ -1,28 +1,11 @@
 import pandas as pd
-import os
-from sqlalchemy import create_engine, select
-from sqlalchemy.orm import sessionmaker, declarative_base
-from dotenv import load_dotenv
+from ..database.database import engine
+from sqlalchemy import select
+from sqlalchemy.orm import sessionmaker
 from ..database.models.surveys import Surveys
 from ..database.models.sections import Sections
 from ..database.models.questions import Questions
 
-load_dotenv()
-
-# TODO: wrap the connection in a function
-Base = declarative_base()
-
-DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT")
-DB_NAME = os.getenv("DB_NAME")
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-
-engine = create_engine(
-    DATABASE_URL, echo=False
-)  # Set echo=True to get printed SQL queries
 
 Session = sessionmaker(bind=engine)
 session = Session()
