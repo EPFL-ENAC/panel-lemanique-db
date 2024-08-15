@@ -16,3 +16,6 @@ ingest_wave2:
 	python3 -m backend.data_ingestion.ingest_wave2
 
 ingest_data: ingest_wave2
+
+run_api:
+	uvicorn backend.app.main:app --reload
