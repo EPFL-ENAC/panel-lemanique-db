@@ -12,6 +12,7 @@ psycopg2-binary = "^2.9.9"
 sqlmodel = "^0.0.21"
 pandas = "^2.2.2"
 pre-commit = "^3.8.0"
+fastapi = {extras = ["standard"], version = "^0.112.0"}
 
 
 [build-system]
