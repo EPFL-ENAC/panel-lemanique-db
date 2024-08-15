@@ -5,7 +5,9 @@ from sqlalchemy.orm import sessionmaker
 from ..database.models.surveys import Surveys
 from ..database.models.sections import Sections
 from ..database.models.questions import Questions
-
+from ..database.models.survey_completion import SurveyCompletion  # noqa F401
+from ..database.models.participants import Participants  # noqa F401
+from ..database.models.responses import Responses  # noqa F401
 
 Session = sessionmaker(bind=engine)
 session = Session()

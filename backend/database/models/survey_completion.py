@@ -1,8 +1,12 @@
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from datetime import date
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from .base import Base
+
+if TYPE_CHECKING:
+    from .participants import Participants
+    from .surveys import Surveys
 
 
 class SurveyCompletion(Base):
@@ -19,3 +23,9 @@ class SurveyCompletion(Base):
     start_date: Mapped[Optional[date]]
     end_date: Mapped[Optional[date]]
     temps_minute: Mapped[Optional[float]]
+    participant: Mapped["Participants"] = relationship(
+        "Participants", back_populates="survey_completions"
+    )
+    survey: Mapped["Surveys"] = relationship(
+        "Surveys", back_populates="survey_completions"
+    )
