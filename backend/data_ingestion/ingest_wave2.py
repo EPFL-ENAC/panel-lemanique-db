@@ -2,22 +2,22 @@ import pandas as pd
 from ..database.database import engine
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
-from ..database.models.surveys import Surveys
-from ..database.models.sections import Sections
-from ..database.models.questions import Questions
+from ..database.models.survey import Survey
+from ..database.models.section import Section
+from ..database.models.question import Question
 from ..database.models.survey_completion import SurveyCompletion  # noqa F401
-from ..database.models.participants import Participants  # noqa F401
-from ..database.models.responses import Responses  # noqa F401
+from ..database.models.participant import Participant  # noqa F401
+from ..database.models.response import Response  # noqa F401
 
 Session = sessionmaker(bind=engine)
 session = Session()
 
 try:
-    survey = Surveys(survey_name="Vague 2", survey_topic="Consommation")
+    survey = Survey(survey_name="Vague 2", survey_topic="Consommation")
     session.add(survey)
     session.commit()
 
-    survey_id = survey.survey_id
+    survey_id = survey.id
 
     data_path = "data_preprocessing/data/wave2/"
 
@@ -35,9 +35,7 @@ try:
 
     # Prepare ingestion of questions
     section_ids = pd.read_sql(
-        select(Sections.section_id, Sections.section_name).where(
-            Sections.survey_id == survey_id
-        ),
+        select(Section.id, Section.section_name).where(Section.survey_id == survey_id),
         con=engine,
     )
 
@@ -45,7 +43,9 @@ try:
     questions = questions.merge(
         section_ids, on="section_name", how="left"
     )  # If NAs are present, section_id will be cast to float
-    questions = questions.drop("section_name", axis=1)
+    questions = questions.drop("section_name", axis=1).rename(
+        columns={"id": "section_id"}
+    )
 
     questions.to_sql(
         "questions",
@@ -58,16 +58,18 @@ try:
 
     # Prepare ingestion of question labels
     query = (
-        select(Questions.question_id, Questions.question_code)
-        .join(Sections, Questions.section_id == Sections.section_id)
-        .where(Sections.survey_id == survey_id)
+        select(Question.id, Question.question_code)
+        .join(Section, Question.section_id == Section.id)
+        .where(Section.survey_id == survey_id)
     )
 
     question_codes = pd.read_sql(query, con=engine)
     question_labels = pd.read_csv(data_path + "question_labels.tsv", sep="\t")
-    question_labels = question_labels.merge(
-        question_codes, on="question_code", how="left"
-    ).drop("question_code", axis=1)
+    question_labels = (
+        question_labels.merge(question_codes, on="question_code", how="left")
+        .drop("question_code", axis=1)
+        .rename(columns={"id": "question_id"})
+    )
 
     question_labels.to_sql(
         "question_labels",
@@ -118,13 +120,17 @@ try:
     )
 
     # Prepare ingestion of responses
-    responses = pd.read_csv(data_path + "responses.tsv", sep="\t").convert_dtypes()
+    responses = pd.read_csv(
+        data_path + "responses.tsv", sep="\t", dtype={"response_text": "str"}
+    ).convert_dtypes()
 
-    responses = responses.merge(question_codes, on="question_code", how="left").drop(
-        "question_code", axis=1
+    responses = (
+        responses.merge(question_codes, on="question_code", how="left")
+        .drop("question_code", axis=1)
+        .rename(columns={"id": "question_id"})
     )
 
-    responses.iloc[:1000].to_sql(
+    responses.iloc[:10000].to_sql(
         "responses",
         con=engine,
         method="multi",
