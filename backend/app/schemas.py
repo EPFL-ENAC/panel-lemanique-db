@@ -13,3 +13,9 @@ class Survey(SurveyBase):
 
     class Config:
         from_attributes = True
+
+
+class CrosstableResult(BaseModel):
+    question1_value: int
+    question2_value: int
+    count: int
