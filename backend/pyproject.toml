@@ -1,8 +1,14 @@
 [tool.poetry]
+name = "panel-lemanique-backend"
+version = "0.0.0"
 description = ""
 authors = ["Hugo Solleder <hugo.solleder@epfl.ch>"]
 readme = "README.md"
-package-mode = false
+packages = [
+    { include = "app"},
+    { include = "data_ingestion" },
+    { include = "database" }
+]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
