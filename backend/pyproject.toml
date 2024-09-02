@@ -16,7 +16,7 @@ python = "^3.10"
 sqlalchemy = "^2.0.32"
 python-dotenv = "^1.0.1"
 psycopg2-binary = "^2.9.9"
-sqlmodel = "^0.0.21"
+sqlmodel = "^0.0.22"
 pandas = "^2.2.2"
 pre-commit = "^3.8.0"
 fastapi = {extras = ["standard"], version = "^0.112.0"}
